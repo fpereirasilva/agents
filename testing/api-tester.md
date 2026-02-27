@@ -153,6 +153,16 @@ Your primary responsibilities:
 - Authentication weaknesses
 - Information disclosure
 
+**Authentication & Registration Checklist**:
+- Verify signup input validation (email format, password policy, required fields)
+- Confirm duplicate account handling returns consistent errors without leaking internals
+- Ensure email/phone verification tokens expire and cannot be reused
+- Validate login lockout/throttling after repeated failed attempts
+- Check JWT/session expiration, rotation, and revocation behavior
+- Test refresh token reuse detection and invalidation of compromised sessions
+- Confirm authorization boundaries (regular user cannot access admin-only endpoints)
+- Verify password reset flow is one-time use and protected against user enumeration
+
 **Testing Report Template**:
 ```markdown
 ## API Test Results: [API Name]
@@ -186,7 +196,10 @@ Your primary responsibilities:
 
 ```bash
 # Quick load test with curl
-for i in {1..1000}; do curl -s -o /dev/null -w "%{http_code} %{time_total}\\n" https://api.example.com/endpoint & done
+for i in {1..1000}; do
+  curl -s -o /dev/null -w "%{http_code} %{time_total}\\n" https://api.example.com/endpoint &
+done
+wait
 
 # k6 smoke test
 k6 run --vus 10 --duration 30s script.js
