@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tela Preta Linux Docker</title>
+    <style>
+      :root {
+        --bg: #03060d;
+        --panel: rgba(4, 16, 30, 0.72);
+        --line: rgba(0, 255, 170, 0.18);
+        --text: #dbe8f2;
+        --muted: #7f93a6;
+        --green: #16d675;
+        --cyan: #1ac7ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 20% 15%, rgba(0, 255, 160, 0.16), transparent 32%),
+          radial-gradient(circle at 80% 80%, rgba(0, 125, 255, 0.12), transparent 36%),
+          repeating-linear-gradient(
+            90deg,
+            rgba(5, 24, 45, 0.8) 0px,
+            rgba(5, 24, 45, 0.8) 1px,
+            rgba(2, 8, 18, 1) 26px,
+            rgba(2, 8, 18, 1) 52px
+          ),
+          var(--bg);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        background: linear-gradient(transparent 97%, rgba(0, 255, 170, 0.08) 98%, transparent 100%);
+        background-size: 100% 5px;
+        opacity: 0.18;
+      }
+
+      body::after {
+        border: 1px solid rgba(0, 255, 170, 0.12);
+        margin: 34px;
+      }
+
+      .layout {
+        width: min(1100px, 92vw);
+        display: grid;
+        gap: 26px;
+        grid-template-columns: 1fr minmax(380px, 1.2fr) 1fr;
+        align-items: center;
+      }
+
+      .terminal,
+      .status {
+        background: var(--panel);
+        border: 1px solid rgba(38, 125, 181, 0.28);
+        border-radius: 14px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.42);
+        backdrop-filter: blur(2px);
+        padding: 18px;
+      }
+
+      .dots {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .dot.red { background: #ff4d4d; }
+      .dot.yellow { background: #f6c445; }
+      .dot.green { background: #35d97a; }
+
+      .terminal pre {
+        margin: 0;
+        white-space: pre-wrap;
+        line-height: 1.55;
+        font-size: 0.88rem;
+        color: #8ec4df;
+      }
+
+      .terminal b {
+        color: var(--green);
+        font-weight: 600;
+      }
+
+      .hero {
+        text-align: center;
+        padding: 14px 10px;
+      }
+
+      .hero .top {
+        letter-spacing: 0.38em;
+        font-size: 0.68rem;
+        color: #4f667a;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 16px 0 6px;
+        font-size: clamp(2.2rem, 6.6vw, 5.2rem);
+        line-height: 0.98;
+        text-transform: uppercase;
+      }
+
+      h1 span {
+        display: block;
+        color: var(--green);
+      }
+
+      .subtitle {
+        margin: 14px 0 22px;
+        color: #8098aa;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 12px;
+      }
+
+      .card {
+        padding: 12px 10px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(1, 12, 23, 0.5);
+      }
+
+      .card .label {
+        text-transform: uppercase;
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+      }
+
+      .card .value {
+        margin-top: 6px;
+        color: #e9f4ff;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .status .title {
+        margin: 2px 0 12px;
+        text-transform: uppercase;
+        color: #5b758d;
+        letter-spacing: 0.2em;
+        font-size: 0.74rem;
+      }
+
+      .status ul {
+        margin: 0;
+        padding-left: 18px;
+        color: #8bb2cb;
+      }
+
+      .status li {
+        margin: 7px 0;
+      }
+
+      .status b {
+        color: var(--cyan);
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .hero {
+          order: -1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="layout">
+      <section class="terminal" aria-label="terminal linux">
+        <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+        <pre><b>$ uname -a</b>
+Linux tela-preta 6.x GNU/Linux
+
+<b>$ cat /etc/os-release</b>
+NAME="Ubuntu"
+VERSION="24.04 LTS"
+
+<b>$ whoami</b>
+tela_preta_expert
+
+<b>$ uptime</b>
+up 365 days, 24/7 learning</pre>
+      </section>
+
+      <section class="hero" aria-label="apresentacao principal">
+        <div class="top">Treinamento Linux Essencial</div>
+        <h1>Tela Preta <span>Linux & Docker</span></h1>
+        <p class="subtitle">Do zero ao terminal com confiança</p>
+
+        <div class="meta">
+          <article class="card">
+            <div class="label">Hora</div>
+            <div class="value" id="clock">--:--:--</div>
+          </article>
+          <article class="card">
+            <div class="label">Temperatura</div>
+            <div class="value" id="temp">-- °C</div>
+          </article>
+          <article class="card">
+            <div class="label">Localidade</div>
+            <div class="value" id="location">Detectando...</div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="status" aria-label="status docker">
+        <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+        <p class="title">Docker Terminal</p>
+        <ul>
+          <li><b>$ docker --version</b><br />Docker version 27.x</li>
+          <li><b>$ docker ps</b><br />nginx, postgres, redis em execução</li>
+          <li><b>$ docker run success</b><br />Container started! ✅</li>
+          <li><b>Clima local:</b> <span id="weatherText">aguardando dados...</span></li>
+        </ul>
+      </aside>
+    </main>
+
+    <script>
+      const clockEl = document.getElementById('clock');
+      const tempEl = document.getElementById('temp');
+      const locationEl = document.getElementById('location');
+      const weatherText = document.getElementById('weatherText');
+
+      function updateClock() {
+        const now = new Date();
+        clockEl.textContent = now.toLocaleTimeString('pt-BR', { hour12: false });
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      async function loadWeather() {
+        try {
+          const geo = await fetch('https://ipapi.co/json/').then(r => r.json());
+          const city = geo.city || 'Cidade';
+          const region = geo.region_code || geo.region || '';
+          const country = geo.country_name || 'Brasil';
+          const lat = geo.latitude;
+          const lon = geo.longitude;
+
+          locationEl.textContent = [city, region, country].filter(Boolean).join(', ');
+
+          if (!lat || !lon) throw new Error('Sem latitude/longitude');
+
+          const weather = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&timezone=auto`).then(r => r.json());
+          const temp = weather?.current?.temperature_2m;
+
+          if (typeof temp === 'number') {
+            tempEl.textContent = `${temp.toFixed(1)} °C`;
+            weatherText.textContent = `${temp.toFixed(1)} °C em ${city}`;
+          } else {
+            throw new Error('Temperatura indisponível');
+          }
+        } catch (error) {
+          locationEl.textContent = 'Não foi possível detectar';
+          tempEl.textContent = '-- °C';
+          weatherText.textContent = 'dados indisponíveis (sem internet/API)';
+        }
+      }
+
+      loadWeather();
+    </script>
+  </body>
+</html>
